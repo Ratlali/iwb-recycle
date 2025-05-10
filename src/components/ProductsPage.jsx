@@ -20,7 +20,7 @@ import CheckoutFlow from './checkout/CheckoutFlow';
 import LoadingSpinner from './ui/LoadingSpinner';
 import ErrorMessage from './ui/ErrorMessage';
 
-// const API_BASE_URL = 'https://iwb-server.onrender.com';
+const API_BASE_URL = 'https://iwb-server-ylcq.onrender.com';
 
 const categoryIcons = {
   RAM: <FaMemory className="text-blue-500" size={24} />,
