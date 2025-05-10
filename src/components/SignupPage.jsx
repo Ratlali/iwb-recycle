@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { FaGoogle, FaUserPlus, FaUserShield, FaUserTie, FaUserCog, FaEnvelope, FaSpinner } from 'react-icons/fa';
+import { FiUser, FiMail, FiLock, FiCheck, FiUserPlus, FiShield, FiBriefcase, FiSettings, FiArrowRight } from 'react-icons/fi';
+import { FcGoogle } from 'react-icons/fc';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import SecurityBubbles from './animation/SecurityBubbles';
 import { baseUrl } from '../utils/service';
 
 const Signup = () => {
@@ -31,7 +30,7 @@ const Signup = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    role: ROLES.SALES // Changed default role to SALES
+    role: ROLES.SALES
   });
 
   const [errors, setErrors] = useState({});
@@ -112,7 +111,7 @@ const Signup = () => {
 
       toast.success(
         <div className="flex items-center">
-          <FaEnvelope className="text-blue-500 mr-2" size={20} />
+          <FiMail className="text-blue-500 mr-2" size={20} />
           <span>Account created! Check your email to confirm your account.</span>
         </div>,
         {
@@ -156,104 +155,119 @@ const Signup = () => {
 
   const getRoleIcon = (role) => {
     switch(role) {
-      case ROLES.SALES: return <FaUserTie className="mr-2" />;
-      case ROLES.FINANCE: return <FaUserShield className="mr-2" />;
-      case ROLES.INVESTOR: return <FaUserCog className="mr-2" />;
-      default: return <FaUserPlus className="mr-2" />;
+      case ROLES.SALES: return <FiBriefcase className="mr-2" />;
+      case ROLES.FINANCE: return <FiShield className="mr-2" />;
+      case ROLES.INVESTOR: return <FiSettings className="mr-2" />;
+      default: return <FiUserPlus className="mr-2" />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4 relative">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <ToastContainer />
-      <SecurityBubbles />
       
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8"
-      >
+      <div className="w-full max-w-md bg-white rounded-xl shadow-sm p-6 sm:p-8 border border-gray-100">
         {signupSuccess ? (
           <div className="text-center py-8">
-            <div className="mx-auto w-20 h-20 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-4">
-              <FaEnvelope className="text-blue-500 dark:text-blue-400 text-4xl" />
+            <div className="mx-auto w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+              <FiMail className="text-blue-500 text-3xl" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Check Your Email!</h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <h1 className="text-2xl font-semibold text-gray-800 mb-2">Check Your Email!</h1>
+            <p className="text-gray-600">
               We've sent a confirmation link to {formData.email}. Please verify your email to complete registration.
             </p>
           </div>
         ) : (
           <>
             <div className="text-center mb-8">
-              <div className="mx-auto w-20 h-20 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4">
-                <FaUserPlus className="text-blue-600 dark:text-blue-400 text-3xl" />
+              <div className="mx-auto w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                <FiUserPlus className="text-blue-500 text-2xl" />
               </div>
-              <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Create an Account</h1>
-              <p className="text-gray-600 dark:text-gray-400">Select your role to get started</p>
+              <h1 className="text-2xl font-semibold text-gray-800 mb-2">Create an Account</h1>
+              <p className="text-gray-500">Select your role to get started</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
-                <input
-                  ref={fullNameRef}
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-2 rounded-lg border ${errors.fullName ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500`}
-                  placeholder="kamohelo mokhethi"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FiUser className="text-gray-400" />
+                  </div>
+                  <input
+                    ref={fullNameRef}
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    className={`w-full pl-10 pr-4 py-2 rounded-lg border ${errors.fullName ? 'border-red-500' : 'border-gray-300'} bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                    placeholder="name lastname"
+                  />
+                </div>
                 {errors.fullName && <p className="text-sm text-red-600 mt-1">{errors.fullName}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-2 rounded-lg border ${errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500`}
-                  placeholder="you@example.com"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FiMail className="text-gray-400" />
+                  </div>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={`w-full pl-10 pr-4 py-2 rounded-lg border ${errors.email ? 'border-red-500' : 'border-gray-300'} bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                    placeholder="you@example.com"
+                  />
+                </div>
                 {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-2 rounded-lg border ${errors.password ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500`}
-                  placeholder="••••••••"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FiLock className="text-gray-400" />
+                  </div>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className={`w-full pl-10 pr-4 py-2 rounded-lg border ${errors.password ? 'border-red-500' : 'border-gray-300'} bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                    placeholder="••••••••"
+                  />
+                </div>
                 {errors.password && <p className="text-sm text-red-600 mt-1">{errors.password}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-2 rounded-lg border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500`}
-                  placeholder="••••••••"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FiCheck className="text-gray-400" />
+                  </div>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className={`w-full pl-10 pr-4 py-2 rounded-lg border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                    placeholder="••••••••"
+                  />
+                </div>
                 {errors.confirmPassword && <p className="text-sm text-red-600 mt-1">{errors.confirmPassword}</p>}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Your Role</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Select Your Role</label>
                 <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className={`w-full px-4 py-2 rounded-lg border ${errors.role ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full px-4 py-2 rounded-lg border ${errors.role ? 'border-red-500' : 'border-gray-300'} bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 >
                   <option value={ROLES.SALES}>Sales Personnel</option>
                   <option value={ROLES.FINANCE}>Finance Personnel</option>
@@ -261,50 +275,36 @@ const Signup = () => {
                   <option value={ROLES.PARTNER}>Partner</option>
                 </select>
                 {errors.role && <p className="text-sm text-red-600 mt-1">{errors.role}</p>}
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   {ROLE_DESCRIPTIONS[formData.role]}
                 </p>
               </div>
 
-              <motion.button
+              <button
                 type="submit"
                 disabled={isSubmitting}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full px-6 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium shadow-md hover:shadow-lg transition-all flex items-center justify-center ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                className={`w-full px-6 py-3 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors flex items-center justify-center ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
                 {isSubmitting ? (
                   <>
-                    <FaSpinner className="animate-spin mr-2" />
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                     Creating Account...
                   </>
                 ) : (
                   <>
                     {getRoleIcon(formData.role)}
-                    Sign Up
+                    <span>Sign Up</span>
+                    <FiArrowRight className="ml-2" />
                   </>
                 )}
-              </motion.button>
+              </button>
             </form>
-
-            <div className="flex items-center my-6">
-              <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
-              <span className="px-3 text-gray-500 dark:text-gray-400 text-sm">OR</span>
-              <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
-            </div>
-
-            <motion.button
-              onClick={handleGoogleSignup}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            >
-              <FaGoogle className="text-blue-500 dark:text-blue-400" />
-              <span>Continue with Google</span>
-            </motion.button>
           </>
         )}
-      </motion.div>
+      </div>
     </div>
   );
 };
