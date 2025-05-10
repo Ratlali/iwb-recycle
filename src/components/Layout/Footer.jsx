@@ -9,7 +9,7 @@ const Footer = ({ toggleDarkMode, darkMode }) => {
                     {/* Company Info */}
                     <div className="space-y-4">
                         <Link to="/" className="flex items-center space-x-2">
-                            <span className="text-xl font-semibold text-gray-900">TechCycle</span>
+                            <span className="text-xl font-semibold text-gray-900">IWB</span>
                         </Link>
                         <p className="text-gray-600">
                             Leading the way in sustainable e-waste management and IT asset disposition across Africa.

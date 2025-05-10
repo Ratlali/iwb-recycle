@@ -149,9 +149,6 @@ const Signup = () => {
     }
   };
 
-  const handleGoogleSignup = () => {
-    window.location.href = `${baseUrl}/api/auth/google`;
-  };
 
   const getRoleIcon = (role) => {
     switch(role) {
