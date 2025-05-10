@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss4",
-  "homepage": "https://github.com/kamohelomokhethi137/iwb.git",
+  "homepage": "https://Ratlali.github.io/iwb-recycle",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,6 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "preview": "vite preview"
   },
   "dependencies": {
