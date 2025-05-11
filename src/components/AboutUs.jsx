@@ -1,5 +1,6 @@
 import React from 'react';
 import recycle from '../assets/recycle.png';
+import s from '../assets/s.jpg'
 import Navbar from './Layout/Navbar';
 
 const AboutUs = () => {
@@ -35,7 +36,7 @@ const AboutUs = () => {
 
           <div className="h-72 md:h-96 rounded-lg overflow-hidden shadow-md">
             <img
-              src={recycle}
+              src={s}
               alt="E-waste recycling"
               className="w-full h-full object-cover"
             />

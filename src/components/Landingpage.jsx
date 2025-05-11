@@ -5,8 +5,11 @@ import Footer from './Layout/Footer';
 
 // Import images
 import circuitBoard from '../assets/2.svg';
-import teamWorking from '../assets/1.jpg';
+// import teamWorking from '../assets/1.jpg';
 import techRecycling from '../assets/2.jpg';
+
+import ke from '../assets/ke.jpg'
+import s from '../assets/her.jpg'
 
 const LandingPage = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -194,7 +197,7 @@ const LandingPage = () => {
               <div className="md:flex">
                 <div className="md:w-1/3">
                   <img 
-                    src={teamWorking} 
+                    src={ke} 
                     alt="Kenneth, Co-Founder"
                     className="w-full h-full object-cover"
                   />
@@ -218,8 +221,8 @@ const LandingPage = () => {
             <div className="bg-gray-50 rounded-2xl overflow-hidden shadow-lg">
               <div className="md:flex">
                 <div className="md:w-1/3">
-                  <img 
-                    src={teamWorking} 
+                  <img  
+                    src={s} 
                     alt="Shadrack, Co-Founder"
                     className="w-full h-full object-cover"
                   />
