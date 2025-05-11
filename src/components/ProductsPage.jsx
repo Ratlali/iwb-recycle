@@ -35,6 +35,83 @@ const fadeIn = {
   visible: { opacity: 1, transition: { duration: 0.3 } }
 };
 
+// Skeleton Loader Component
+const ProductCardSkeleton = () => (
+  <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+    <div className="relative h-48 bg-gray-200 animate-pulse"></div>
+    <div className="p-4">
+      <div className="flex items-center mb-2">
+        <div className="w-6 h-6 rounded-full bg-gray-200 animate-pulse"></div>
+        <div className="ml-2 h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <div className="h-5 w-3/4 bg-gray-200 rounded mb-2 animate-pulse"></div>
+      <div className="space-y-2 mb-3">
+        <div className="h-3 w-full bg-gray-200 rounded animate-pulse"></div>
+        <div className="h-3 w-5/6 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <div className="flex justify-between items-center mb-3">
+        <div className="h-6 w-16 bg-gray-200 rounded animate-pulse"></div>
+        <div className="flex items-center">
+          <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+          <div className="ml-1 h-4 w-8 bg-gray-200 rounded animate-pulse"></div>
+        </div>
+      </div>
+      <div className="h-10 w-full bg-gray-200 rounded-md animate-pulse"></div>
+    </div>
+  </div>
+);
+
+const ProductImage = ({ src, alt, className, category }) => {
+  const [imgSrc, setImgSrc] = useState(src);
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fallbackImages = {
+    RAM: '/assets/ram-placeholder.jpg',
+    Motherboards: '/assets/motherboard-placeholder.jpg',
+    Storage: '/assets/storage-placeholder.jpg',
+    Processors: '/assets/processor-placeholder.jpg',
+    Laptops: '/assets/laptop-placeholder.jpg',
+    default: '/assets/default-placeholder.jpg'
+  };
+
+  useEffect(() => {
+    setImgSrc(src);
+    setHasError(false);
+    setIsLoading(true);
+  }, [src]);
+
+  const handleError = () => {
+    if (!hasError) {
+      const fallback = fallbackImages[category] || fallbackImages.default;
+      setImgSrc(fallback);
+      setHasError(true);
+    }
+    setIsLoading(false);
+  };
+
+  const handleLoad = () => {
+    setIsLoading(false);
+  };
+
+  return (
+    <div className="relative h-48">
+      {isLoading && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
+      )}
+      <img 
+        src={imgSrc}
+        alt={alt}
+        className={`w-full h-full ${className} ${
+          isLoading ? 'opacity-0' : 'opacity-100'
+        } ${hasError ? 'object-contain p-4 bg-gray-100' : 'object-cover'}`}
+        onError={handleError}
+        onLoad={handleLoad}
+      />
+    </div>
+  );
+};
+
 const ProductCard = ({ 
   product, 
   onAddToCart, 
@@ -54,15 +131,12 @@ const ProductCard = ({
       className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 relative"
     >
       <div className="relative">
-        <img 
+        <ProductImage 
           src={product.image} 
           alt={product.name}
-          className="w-full h-48 object-cover transition-opacity duration-300"
+          className="transition-opacity duration-300"
           style={{ opacity: isHovered ? 0.9 : 1 }}
-          onError={(e) => {
-            e.target.src = '/placeholder-product.jpg';
-            e.target.className = 'w-full h-48 object-contain p-4 bg-gray-100';
-          }}
+          category={product.category}
         />
         <button
           onClick={(e) => {
@@ -120,7 +194,17 @@ const ProductCard = ({
   );
 };
 
-const ProductGrid = ({ products, onAddToCart, onToggleWishlist, wishlist }) => {
+const ProductGrid = ({ products, onAddToCart, onToggleWishlist, wishlist, isLoading }) => {
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {[...Array(8)].map((_, index) => (
+          <ProductCardSkeleton key={index} />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {products.map((product) => (
@@ -148,8 +232,8 @@ const ProductsPage = () => {
   const [error, setError] = useState(null);
   const [showCartModal, setShowCartModal] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  // Memoized fetch function
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
@@ -167,6 +251,7 @@ const ProductsPage = () => {
       
       setProducts(productsWithIcons);
       setFilteredProducts(productsWithIcons);
+      setIsInitialLoad(false);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -178,16 +263,13 @@ const ProductsPage = () => {
     fetchProducts();
   }, [fetchProducts]);
 
-  // Filter and sort products
   useEffect(() => {
     let result = [...products];
     
-    // Category filter
     if (selectedCategory !== 'All') {
       result = result.filter(p => p.category === selectedCategory);
     }
     
-    // Search filter
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       result = result.filter(p => 
@@ -196,7 +278,6 @@ const ProductsPage = () => {
       );
     }
     
-    // Sort
     result.sort((a, b) => {
       switch (sortOption) {
         case 'price-low': return a.price - b.price;
@@ -209,7 +290,6 @@ const ProductsPage = () => {
     setFilteredProducts(result);
   }, [products, selectedCategory, searchTerm, sortOption]);
 
-  // Cart operations
   const addToCart = useCallback((product) => {
     if (product.stock <= 0) return;
     
@@ -249,17 +329,14 @@ const ProductsPage = () => {
     );
   }, []);
 
-  // Clear cart after successful checkout
   const clearCart = () => {
     setCart([]);
   };
 
-  // Calculate totals
   const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
   const categories = ['All', ...new Set(products.map(p => p.category))];
 
-  // Clear search
   const clearSearch = () => {
     setSearchTerm('');
     setSelectedCategory('All');
@@ -295,16 +372,12 @@ const ProductsPage = () => {
           onClear={clearSearch}
         />
 
-        {loading ? (
-          <div className="flex justify-center mt-12">
-            <LoadingSpinner size="lg" />
-          </div>
-        ) : error ? (
+        {error ? (
           <ErrorMessage 
             message={`Error loading products: ${error}`}
             onRetry={fetchProducts}
           />
-        ) : filteredProducts.length === 0 ? (
+        ) : filteredProducts.length === 0 && !isInitialLoad ? (
           <div className="text-center py-12">
             <FaSearch className="mx-auto text-gray-400 text-4xl mb-4" />
             <h3 className="text-lg font-medium text-gray-900">No products found</h3>
@@ -330,6 +403,7 @@ const ProductsPage = () => {
             onAddToCart={addToCart}
             onToggleWishlist={toggleWishlist}
             wishlist={wishlist}
+            isLoading={loading && isInitialLoad}
           />
         )}
       </main>
