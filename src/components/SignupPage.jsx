@@ -315,7 +315,7 @@ const Signup = () => {
                   onChange={handleChange}
                   className={`w-full px-4 py-2 rounded-lg border ${errors.role ? 'border-red-500' : 'border-gray-300'} bg-white text-gray-900 focus:ring-2 focus:ring-blue-300 focus:border-transparent`}
                 >
-                  <option value={ROLES.CLIENT}>Client</option>
+                  {/* <option value={ROLES.CLIENT}>Client</option> */}
                   <option value={ROLES.SALES}>Sales Personnel</option>
                   <option value={ROLES.FINANCE}>Finance Personnel</option>
                   <option value={ROLES.INVESTOR}>Investor</option>
@@ -347,23 +347,6 @@ const Signup = () => {
                 )}
               </motion.button>
             </form>
-
-            <div className="flex items-center my-6">
-              <div className="flex-1 border-t border-gray-300"></div>
-              <span className="px-3 text-gray-500 text-sm">OR</span>
-              <div className="flex-1 border-t border-gray-300"></div>
-            </div>
-
-            <motion.button
-              onClick={handleGoogleSignup}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              <FaGoogle className="text-blue-500" />
-              <span>Continue with Google</span>
-            </motion.button>
-
             <div className="text-center mt-6 text-sm text-gray-600">
               Already have an account?{' '}
               <button 
