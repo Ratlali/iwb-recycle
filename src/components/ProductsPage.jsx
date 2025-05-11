@@ -1,24 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  FaMemory, 
-  FaProjectDiagram, 
-  FaHdd, 
-  FaMicrochip,
-  FaLaptop,
-  FaShoppingCart,
-  FaHeart,
-  FaRegHeart,
-  FaSearch,
-  FaTimes
-} from 'react-icons/fa';
+import { FaMemory, FaProjectDiagram,  FaHdd, FaMicrochip,FaLaptop,FaShoppingCart,FaHeart,FaRegHeart,FaSearch,FaTimes} from 'react-icons/fa';
 import Navbar from './Layout/Navbar';
 import ProductFilters from './products/ProductFilters';
 import CartPreview from './cart/CartPreview';
 import CartModal from './cart/CartModal';
 import CheckoutFlow from './checkout/CheckoutFlow';
-import LoadingSpinner from './ui/LoadingSpinner';
 import ErrorMessage from './ui/ErrorMessage';
+
+// fallback images
+
+import mother from '../assets/rollback/mother.jpg';
+import cpu from '../assets/rollback/cpu.jpg'
+import ram from '../assets/rollback/ram.jpg'
+import rollback from '../assets/rollback/fallback.png'
+import laptop from '../assets/rollback/laptop.jpg'
+import ssd from '../assets/rollback/ssd.jpg'
+
+
 
 const API_BASE_URL = 'https://iwb-server-ylcq.onrender.com';
 
@@ -30,33 +29,46 @@ const categoryIcons = {
   Laptops: <FaLaptop className="text-green-500" size={24} />
 };
 
+const categoryPlaceholders = {
+  RAM: ram,
+  Motherboards: mother,
+  Storage: ssd,
+  Processors: cpu,
+  Laptops: laptop,
+  default: rollback
+};
+
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.3 } }
 };
 
-// Skeleton Loader Component
+// Enhanced Skeleton Loader Component
 const ProductCardSkeleton = () => (
-  <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
-    <div className="relative h-48 bg-gray-200 animate-pulse"></div>
+  <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 animate-pulse">
+    <div className="relative h-48 bg-gray-200 flex items-center justify-center">
+      <div className="w-16 h-16 text-gray-300">
+        <FaLaptop className="w-full h-full" />
+      </div>
+    </div>
     <div className="p-4">
       <div className="flex items-center mb-2">
-        <div className="w-6 h-6 rounded-full bg-gray-200 animate-pulse"></div>
-        <div className="ml-2 h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
+        <div className="w-6 h-6 rounded-full bg-gray-200"></div>
+        <div className="ml-2 h-4 w-20 bg-gray-200 rounded"></div>
       </div>
-      <div className="h-5 w-3/4 bg-gray-200 rounded mb-2 animate-pulse"></div>
+      <div className="h-5 w-3/4 bg-gray-200 rounded mb-2"></div>
       <div className="space-y-2 mb-3">
-        <div className="h-3 w-full bg-gray-200 rounded animate-pulse"></div>
-        <div className="h-3 w-5/6 bg-gray-200 rounded animate-pulse"></div>
+        <div className="h-3 w-full bg-gray-200 rounded"></div>
+        <div className="h-3 w-5/6 bg-gray-200 rounded"></div>
       </div>
       <div className="flex justify-between items-center mb-3">
-        <div className="h-6 w-16 bg-gray-200 rounded animate-pulse"></div>
+        <div className="h-6 w-16 bg-gray-200 rounded"></div>
         <div className="flex items-center">
-          <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
-          <div className="ml-1 h-4 w-8 bg-gray-200 rounded animate-pulse"></div>
+          <div className="h-4 w-4 bg-gray-200 rounded"></div>
+          <div className="ml-1 h-4 w-8 bg-gray-200 rounded"></div>
         </div>
       </div>
-      <div className="h-10 w-full bg-gray-200 rounded-md animate-pulse"></div>
+      <div className="h-10 w-full bg-gray-200 rounded-md"></div>
     </div>
   </div>
 );
@@ -66,47 +78,42 @@ const ProductImage = ({ src, alt, className, category }) => {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fallbackImages = {
-    RAM: '/assets/ram-placeholder.jpg',
-    Motherboards: '/assets/motherboard-placeholder.jpg',
-    Storage: '/assets/storage-placeholder.jpg',
-    Processors: '/assets/processor-placeholder.jpg',
-    Laptops: '/assets/laptop-placeholder.jpg',
-    default: '/assets/default-placeholder.jpg'
-  };
-
   useEffect(() => {
-    setImgSrc(src);
-    setHasError(false);
-    setIsLoading(true);
-  }, [src]);
-
-  const handleError = () => {
-    if (!hasError) {
-      const fallback = fallbackImages[category] || fallbackImages.default;
-      setImgSrc(fallback);
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+      setImgSrc(src);
+      setIsLoading(false);
+    };
+    img.onerror = () => {
+      setImgSrc(categoryPlaceholders[category] || categoryPlaceholders.default);
       setHasError(true);
-    }
-    setIsLoading(false);
-  };
-
-  const handleLoad = () => {
-    setIsLoading(false);
-  };
+      setIsLoading(false);
+    };
+  }, [src, category]);
 
   return (
-    <div className="relative h-48">
-      {isLoading && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
-      )}
+    <div className="relative h-48 bg-gray-100 overflow-hidden">
+      {/* Fallback background with category icon */}
+      <div 
+        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
+          isLoading || hasError ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        {categoryIcons[category] || <FaLaptop className="text-gray-300" size={48} />}
+      </div>
+      
+      {/* Main product image */}
       <img 
         src={imgSrc}
         alt={alt}
-        className={`w-full h-full ${className} ${
+        className={`w-full h-full ${className} object-cover transition-opacity duration-300 ${
           isLoading ? 'opacity-0' : 'opacity-100'
-        } ${hasError ? 'object-contain p-4 bg-gray-100' : 'object-cover'}`}
-        onError={handleError}
-        onLoad={handleLoad}
+        } ${hasError ? 'object-contain p-4' : 'object-cover'}`}
+        onError={() => {
+          setImgSrc(categoryPlaceholders[category] || categoryPlaceholders.default);
+          setHasError(true);
+        }}
       />
     </div>
   );
@@ -143,7 +150,7 @@ const ProductCard = ({
             e.stopPropagation();
             onToggleWishlist(product.id);
           }}
-          className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md z-10"
+          className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md z-10 hover:scale-110 transition-transform"
           aria-label={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
         >
           {isInWishlist ? (
@@ -163,7 +170,7 @@ const ProductCard = ({
 
       <div className="p-4">
         <div className="flex items-center mb-2">
-          {product.categoryIcon}
+          {categoryIcons[product.category] || null}
           <span className="ml-2 text-sm text-gray-600">{product.category}</span>
         </div>
 
@@ -201,6 +208,16 @@ const ProductGrid = ({ products, onAddToCart, onToggleWishlist, wishlist, isLoad
         {[...Array(8)].map((_, index) => (
           <ProductCardSkeleton key={index} />
         ))}
+      </div>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <FaSearch className="mx-auto text-gray-400 text-4xl mb-4" />
+        <h3 className="text-lg font-medium text-gray-900">No products found</h3>
+        <p className="text-gray-500 mt-1">Try adjusting your search criteria</p>
       </div>
     );
   }
@@ -245,7 +262,6 @@ const ProductsPage = () => {
       const productsWithIcons = data.products.map(product => ({
         ...product,
         id: product._id || product.id,
-        categoryIcon: categoryIcons[product.category] || null,
         createdAt: product.createdAt || new Date().toISOString()
       }));
       
@@ -333,14 +349,14 @@ const ProductsPage = () => {
     setCart([]);
   };
 
-  const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
-  const categories = ['All', ...new Set(products.map(p => p.category))];
-
   const clearSearch = () => {
     setSearchTerm('');
     setSelectedCategory('All');
   };
+
+  const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const categories = ['All', ...new Set(products.map(p => p.category))];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -377,26 +393,6 @@ const ProductsPage = () => {
             message={`Error loading products: ${error}`}
             onRetry={fetchProducts}
           />
-        ) : filteredProducts.length === 0 && !isInitialLoad ? (
-          <div className="text-center py-12">
-            <FaSearch className="mx-auto text-gray-400 text-4xl mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">No products found</h3>
-            <p className="text-gray-500 mt-1">
-              {searchTerm || selectedCategory !== 'All' ? (
-                <>
-                  Try adjusting your search or 
-                  <button 
-                    onClick={clearSearch}
-                    className="text-blue-600 hover:text-blue-800 ml-1"
-                  >
-                    clear filters
-                  </button>
-                </>
-              ) : (
-                "We couldn't find any products matching your criteria"
-              )}
-            </p>
-          </div>
         ) : (
           <ProductGrid
             products={filteredProducts}

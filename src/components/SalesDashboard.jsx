@@ -27,11 +27,8 @@ const SalesDashboard = () => {
   // Sales menu items
   const menuItems = [
     { name: 'Overview', icon: <FiHome />, id: 'overview' },
-    { name: 'Leads', icon: <FiUsers />, id: 'leads' },
-    { name: 'Conversions', icon: <FiTrendingUp />, id: 'conversions' },
-    { name: 'Pipeline', icon: <FiDollarSign />, id: 'pipeline' },
-    { name: 'Revenue', icon: <FiBarChart2 />, id: 'revenue' },
-    { name: 'Targets', icon: <FiTarget />, id: 'targets' }
+    { name: 'Report', icon: <FiUsers />, id: 'report' },
+
   ];
 
   // Sales metrics data
