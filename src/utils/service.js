@@ -1,1 +1,1 @@
-export const baseUrl = "https://iwb-server-ylcq.onrender.com/";
+export const baseUrl = "https://iwb-server-ylcq.onrender.com";
