@@ -80,7 +80,7 @@ const Login = () => {
           finance: '/finance-dashboard',
           investor: '/investor-portal',
           partner: '/partner-dashboard',
-          admin: '/admin',
+          client: '/',
           developer: '/developer'
         };
 
