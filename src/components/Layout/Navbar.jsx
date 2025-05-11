@@ -78,14 +78,14 @@ function Navbar() {
   };
 
   // Generate user initials for avatar
-  // const getUserInitials = () => {
-  //   if (!user) return '';
-  //   const nameParts = user.name ? user.name.split(' ') : user.email.split('@')[0].split('.');
-  //   return nameParts
-  //     .map(part => part.charAt(0).toUpperCase()
-  //     .join('')
-  //     .substring(0, 2);
-  // };
+  const getUserInitials = () => {
+    if (!user) return '';
+    const nameParts = user.name ? user.name.split(' ') : user.email.split('@')[0].split('.');
+    return nameParts
+      .map(part => part.charAt(0).toUpperCase()
+      .join('')
+      .substring(0, 2));
+  };
 
   // Get avatar color based on user role
   const getAvatarColor = () => {
