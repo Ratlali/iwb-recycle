@@ -52,7 +52,7 @@ const LandingPage = () => {
                   Explore Services
                 </Link>
                 <Link
-                  to="/about"
+                  to="/aboutus"
                   className="px-8 py-4 border-2 border-blue-600 text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition-all duration-300"
                 >
                   Learn About Us
