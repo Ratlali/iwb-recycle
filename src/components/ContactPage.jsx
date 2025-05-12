@@ -74,8 +74,8 @@ const ContactPage = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">Email Us</h3>
-            <p className="text-gray-600 mb-4">info@iwb.co.ls</p>
-            <a href="mailto:info@iwb.co.ls" className="text-green-600 hover:text-green-700 font-medium">
+            <p className="text-gray-600 mb-4">stock@techcycle.africa</p>
+            <a href="mailto:stock@techcycle.africa" className="text-green-600 hover:text-green-700 font-medium">
               Send Email
             </a>
           </div>
