@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { FaGoogle, FaUserPlus, FaUserShield, FaUserTie, FaUserCog, FaEnvelope, FaSpinner, FaCheckCircle } from 'react-icons/fa';
-import { FiUserPlus } from 'react-icons/fi'; // Changed icon import
+import { FaUserShield, FaUserTie, FaUserCog, FaEnvelope, FaSpinner, FaCheckCircle } from 'react-icons/fa';
+import { FiUserPlus } from 'react-icons/fi';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -12,21 +12,19 @@ import { baseUrl } from '../utils/service';
 const Signup = () => {
   const navigate = useNavigate();
   
-  // Define available roles
+  // Define available roles (removed CLIENT)
   const ROLES = {
     SALES: 'sales',
     FINANCE: 'finance',
     INVESTOR: 'investor',
-    PARTNER: 'partner',
-    CLIENT: 'client'
+    PARTNER: 'partner'
   };
 
   const ROLE_DESCRIPTIONS = {
     [ROLES.SALES]: 'Sales Personnel (Max 3) - Can access sales records',
     [ROLES.FINANCE]: 'Finance Personnel (Max 3) - Can access income statements',
     [ROLES.INVESTOR]: 'Investor - Read-only income statements',
-    [ROLES.PARTNER]: 'Partner - Full solution access (except queries)',
-    [ROLES.CLIENT]: 'Client - Regular customer account'
+    [ROLES.PARTNER]: 'Partner - Full solution access (except queries)'
   };
 
   const [formData, setFormData] = useState({
@@ -34,12 +32,12 @@ const Signup = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    role: ROLES.CLIENT // Default role set to CLIENT
+    role: ROLES.SALES // Changed default role to SALES
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [signupStatus, setSignupStatus] = useState(null); // null, 'success', or 'requires_verification'
+  const [signupStatus, setSignupStatus] = useState(null);
   const [roleCounts, setRoleCounts] = useState(null);
   const fullNameRef = useRef(null);
 
@@ -113,7 +111,6 @@ const Signup = () => {
         role: formData.role
       });
 
-      // Handle different success cases based on response
       if (response.data.requiresEmailVerification) {
         setSignupStatus('requires_verification');
         toast.success(
@@ -131,7 +128,6 @@ const Signup = () => {
           }
         );
         
-        // Navigate to email confirmation page after delay
         setTimeout(() => {
           navigate('/email-confirmation', { 
             state: { 
@@ -141,7 +137,6 @@ const Signup = () => {
           });
         }, 3000);
       } else {
-        // Direct login case (if verification not required)
         setSignupStatus('success');
         toast.success(
           <div className="flex items-center">
@@ -158,7 +153,6 @@ const Signup = () => {
           }
         );
         
-        // Redirect to dashboard after delay
         setTimeout(() => {
           navigate('/dashboard');
         }, 3000);
@@ -167,7 +161,6 @@ const Signup = () => {
     } catch (err) {
       console.error('Signup failed:', err.response?.data || err.message);
       
-      // Handle specific error cases
       if (err.response?.data?.message === 'This email is already registered') {
         setErrors({ email: 'Email already exists' });
         toast.error('Email already registered. Please login instead.', {
@@ -191,17 +184,13 @@ const Signup = () => {
     }
   };
 
-  const handleGoogleSignup = () => {
-    window.location.href = `${baseUrl}/api/auth/google`;
-  };
-
   const getRoleIcon = (role) => {
     switch(role) {
       case ROLES.SALES: return <FaUserTie className="mr-2" />;
       case ROLES.FINANCE: return <FaUserShield className="mr-2" />;
       case ROLES.INVESTOR: return <FaUserCog className="mr-2" />;
-      case ROLES.CLIENT: return <FaUserPlus className="mr-2" />;
-      default: return <FaUserPlus className="mr-2" />;
+      case ROLES.PARTNER: return <FaUserShield className="mr-2" />;
+      default: return <FiUserPlus className="mr-2" />;
     }
   };
 
@@ -247,7 +236,7 @@ const Signup = () => {
           <>
             <div className="text-center mb-8">
               <div className="mx-auto w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
-                <FiUserPlus className="text-blue-500 text-3xl" /> {/* Changed icon */}
+                <FiUserPlus className="text-blue-500 text-3xl" />
               </div>
               <h1 className="text-3xl font-bold text-gray-800 mb-2">Create an Account</h1>
               <p className="text-gray-600">Select your role to get started</p>
@@ -315,7 +304,6 @@ const Signup = () => {
                   onChange={handleChange}
                   className={`w-full px-4 py-2 rounded-lg border ${errors.role ? 'border-red-500' : 'border-gray-300'} bg-white text-gray-900 focus:ring-2 focus:ring-blue-300 focus:border-transparent`}
                 >
-                  {/* <option value={ROLES.CLIENT}>Client</option> */}
                   <option value={ROLES.SALES}>Sales Personnel</option>
                   <option value={ROLES.FINANCE}>Finance Personnel</option>
                   <option value={ROLES.INVESTOR}>Investor</option>
